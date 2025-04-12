@@ -1,0 +1,60 @@
+<!-- trip-visualizer.component.html -->
+<div class="trip-visualizer">
+  <h2>Trip Visualizer</h2>
+  
+  <div class="input-container">
+    <div class="form-group">
+      <label for="startPoint">Start Point</label>
+      <input 
+        type="text" 
+        id="startPoint" 
+        [(ngModel)]="startPoint" 
+        placeholder="Enter start point (e.g., BLR)"
+      >
+    </div>
+    
+    <div class="form-group">
+      <label for="endPoint">End Point</label>
+      <input 
+        type="text" 
+        id="endPoint" 
+        [(ngModel)]="endPoint" 
+        placeholder="Enter end point (e.g., MAA)"
+      >
+    </div>
+    
+    <button (click)="handleAddTrip()">Add Trip</button>
+  </div>
+  
+  <div class="trips-container" *ngIf="trips.length > 0">
+    <div class="trip-flow">
+      <div class="trip-segment" *ngFor="let trip of trips; let i = index">
+        <!-- Start city point -->
+        <div class="city-point" [class.continued]="isContinuedTrip(i)">
+          <div class="dot" [class.filled]="!isContinuedTrip(i)"></div>
+          <div class="city-code" *ngIf="!isContinuedTrip(i)">
+            {{ trip.start | uppercase }}
+          </div>
+        </div>
+        
+        <!-- Connection line -->
+        <div class="connection-line" [ngClass]="getLineClass(i)">
+          <div class="line"></div>
+          <div class="trip-code">{{ trip.start | uppercase }} - {{ trip.end | uppercase }}</div>
+        </div>
+        
+        <!-- End city point -->
+        <div class="city-point">
+          <div class="dot filled"></div>
+          <div class="city-code">
+            {{ trip.end | uppercase }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="empty-state" *ngIf="trips.length === 0">
+    <p>No trips added yet. Add your first trip above!</p>
+  </div>
+</div> 

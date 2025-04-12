@@ -1,0 +1,56 @@
+<div class="input-section">
+  <input [(ngModel)]="startPoint" placeholder="Start Point" />
+  <input [(ngModel)]="endPoint" placeholder="End Point" />
+  <button (click)="addTrip()">Add Trip</button>
+</div>
+
+<svg [attr.width]="trips.length * 140 + 100" height="200">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1E90FF"></path>
+    </marker>
+  </defs>
+
+  <ng-container *ngFor="let trip of trips; let i = index">
+    <circle
+      [attr.cx]="50 + i * 140"
+      [attr.cy]="getLevel(i) === 1 ? 60 : 130"
+      r="5"
+      [attr.fill]="getLevel(i) === 2 ? '#FFA500' : '#4169E1'"
+      stroke="white"
+      stroke-width="2"
+    ></circle>
+
+    <circle
+      [attr.cx]="50 + (i + 1) * 140"
+      [attr.cy]="getLevel(i) === 1 ? 60 : 130"
+      r="5"
+      fill="white"
+      stroke="#999"
+      stroke-width="2"
+    ></circle>
+
+    <path
+      [attr.d]="
+        getLevel(i) === 2
+          ? 'M' + (50 + i * 140) + ',' + 130 + ' C' + (50 + i * 140 + 70) + ',' + 90 + ' ' +
+            (50 + i * 140 + 70) + ',' + 90 + ' ' + (50 + (i + 1) * 140) + ',' + 130
+          : 'M' + (50 + i * 140) + ',' + 60 + ' L' + (50 + (i + 1) * 140) + ',' + 60
+      "
+      [attr.stroke]="getLevel(i) === 2 ? '#FFA500' : isContinued(i) ? '#999' : '#1E90FF'"
+      stroke-width="2"
+      fill="none"
+      [attr.marker-end]="!isContinued(i) && getLevel(i) === 1 ? 'url(#arrow)' : null"
+    ></path>
+
+    <text
+      [attr.x]="50 + i * 140 + 70"
+      [attr.y]="getLevel(i) === 2 ? 150 : 85"
+      font-size="12"
+      text-anchor="middle"
+      [attr.fill]="getLevel(i) === 2 ? '#FFA500' : isContinued(i) ? '#4169E1' : '#1E90FF'"
+    >
+      {{ trip.start.slice(0, 3) }} - {{ trip.end.slice(0, 3) }}
+    </text>
+  </ng-container>
+</svg>
